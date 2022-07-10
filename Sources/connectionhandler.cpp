@@ -53,7 +53,6 @@ bool ConnectionHandler::alive() const
 #endif
 }
 
-
 bool ConnectionHandler::requiresAddressType() const
 {
 #if QT_CONFIG(bluez)
@@ -91,8 +90,8 @@ void ConnectionHandler::errorOccured(QGeoPositionInfoSource::Error err){
         m_loc = true;
         emit locationChanged();
     }
-    else {
-        m_loc = true;
+    else if (QGeoPositionInfoSource::UpdateTimeoutError ){
+        m_loc = false;
         emit locationChanged();
     }
 }
