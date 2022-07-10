@@ -57,23 +57,29 @@ signals:
     void connectionChanged();
     void aliveChanged();
     void statsChanged();
+    void dataReceived(const QByteArray &data);
 
 public slots:
     void disconnectService();
     void write(QByteArray &swn);
+
+
+
+
 
 private:
     //QLowEnergyController
     void serviceDiscovered(const QBluetoothUuid &);
     void serviceScanDone();
 
-    //QLowEnergyService
 
+    //QLowEnergyService
+    void onCharacteristicRead(const QLowEnergyCharacteristic &c, const QByteArray &value);
     void serviceStateChanged(QLowEnergyService::ServiceState s);
 
-#ifdef SIMULATOR
-    void updateDemoHR();
-#endif
+private slots:
+    void read();
+    void inforead(const QByteArray &infr);
 private:
 
     QLowEnergyController *m_control = nullptr;
