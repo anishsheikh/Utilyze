@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/bt_off_to_on.png</file>
+        <file>images/logo.png</file>
+        <file>images/location.png</file>
+    </qresource>
+</RCC>
