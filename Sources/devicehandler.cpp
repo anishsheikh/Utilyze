@@ -21,10 +21,15 @@
 #include "Headers/deviceinfo.h"
 #include <QtEndian>
 #include <QRandomGenerator>
+#include <qdebug.h>
 
 DeviceHandler::DeviceHandler(QObject *parent) :
     BluetoothBaseClass(parent),
-    m_foundRoomNetService(false){}
+    m_foundRoomNetService(false),
+    m_disconnected(true)
+{
+
+}
 
 
 
@@ -81,9 +86,13 @@ void DeviceHandler::setDevice(DeviceInfo *device)
         connect(m_control, &QLowEnergyController::connected, this, [this]() {
             setInfo("Connected, Searching RoomNet");
             m_control->discoverServices();
+            m_disconnected = false;
+            emit discChanged();
         });
         connect(m_control, &QLowEnergyController::disconnected, this, [this]() {
-            setError("Bluetooth disconnected");
+            setError("RoomNet disconnected");
+            m_disconnected = true;
+            emit discChanged();
         });
 
         // Connect
@@ -92,16 +101,73 @@ void DeviceHandler::setDevice(DeviceInfo *device)
     }
 }
 
+bool DeviceHandler::disc() {
+    return m_disconnected;
+}
+
 void DeviceHandler::write(QByteArray &swn)
 {
         if(m_service != nullptr && m_foundRoomNetService == true){
         const QLowEnergyCharacteristic input = m_service->characteristic(QBluetoothUuid(DeviceHandler::BleApplianceInputid));
         m_service->writeCharacteristic(input, QByteArray::fromHex(swn));
+        DeviceHandler::read();
         }
         else {
             setInfo("Unknown Error");
         }
 }
+
+void DeviceHandler::read()
+
+{
+    if (m_service != nullptr && m_foundRoomNetService == true)
+    {
+    connect(m_service, &QLowEnergyService::characteristicRead,
+               this, &DeviceHandler::onCharacteristicRead);
+    const QLowEnergyCharacteristic output = m_service->characteristic(QBluetoothUuid(DeviceHandler::BleApplianceOutputid));
+    m_service->readCharacteristic(output);
+    }
+    else {
+        setInfo("Unknown Error");
+    }
+}
+
+void DeviceHandler::onCharacteristicRead(const QLowEnergyCharacteristic &c,
+                                        const QByteArray &value){
+    Q_UNUSED(c)
+    emit dataReceived(value);
+    DeviceHandler::inforead(value);
+}
+
+void DeviceHandler::inforead(const QByteArray &infr) {
+    if (infr == "\x01") {
+        setInfo("Switched Number 1");
+    }
+    else if (infr == "\x02") {
+        setInfo("Switched Number 2");
+    }
+    else if (infr == "\x03") {
+        setInfo("Switched Number 3");
+    }
+    else if (infr == "\x04") {
+        setInfo("Switched Number 4");
+    }
+    else if (infr == "\x05") {
+        setInfo("Switched Number 5");
+    }
+    else if (infr == "\x06") {
+        setInfo("Switched Number 6");
+    }
+    else if (infr == "\x07") {
+        setInfo("Switched Number 7");
+    }
+    else {
+        setInfo("Switched Number 8");
+    }
+
+}
+
+
 
 //! [Filter HeartRate service 1]
 void DeviceHandler::serviceDiscovered(const QBluetoothUuid &gatt)
