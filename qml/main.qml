@@ -26,6 +26,7 @@ Window {
     height: 1240 * .7
     title: qsTr("Utilyze")
     color: GameSettings.backgroundColor
+    flags:Qt.Window | Qt.WindowTitleHint | Qt.WindowSystemMenuHint | Qt.MaximizeUsingFullscreenGeometryHint
 
     Component.onCompleted: {
         GameSettings.wWidth = Qt.binding(function() {return width})
