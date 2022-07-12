@@ -22,7 +22,7 @@ Rectangle    {
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    height: GameSettings.fieldHeight
+    height: GameSettings.fieldHeight * 1.5
     color: GameSettings.viewColor
 
     property var __titles: ["CONNECT", "CONTROL"]
@@ -34,7 +34,7 @@ Rectangle    {
         model: 2
         Text {
             width: titleBar.width / 2
-            height: titleBar.height
+            height: titleBar.height * 1.35
             x: index * width
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
