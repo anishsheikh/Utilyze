@@ -22,7 +22,6 @@ GamePage {
 
     errorMessage: deviceFinder.error
     infoMessage: deviceFinder.info
-
     Rectangle {
         id: viewContainer
         anchors.top: parent.top
@@ -78,8 +77,27 @@ GamePage {
                 anchors.right: parent.right
                 color: GameSettings.textColor
                 font.pixelSize: GameSettings.smallTinyFontSize
-                text: qsTr("\n\nClick Start Search Button, Tap On Devices With 'RoomNet' to Get Started.\n If No Device With 'RoomNet' found, Check if The Appliance is Installed Properly and Turned on\n or \nYou Maybe Too Far From The Device")
+                text: qsTr("\nRoomNet Can Connect To One Device \n At a time \n Disconnect from other Devices Before Connecting \nClick Start Search Button, Tap On Devices With 'RoomNet' to Get Started.")
                 visible: deviceFinder.ready
+            }
+
+            Text {
+                id: title3
+                height:GameSettings.fieldHeight * 1.2
+                width: devices.width
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                anchors.top: parent.top
+                anchors.topMargin: parent.height * 0.1
+                anchors.leftMargin: parent.height * 0.1
+                anchors.left: parent.left
+                anchors.rightMargin: parent.height * 0.1
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: GamePage.Center
+                anchors.right: parent.right
+                color: GameSettings.textColor
+                font.pixelSize: GameSettings.smallTinyFontSize
+                text: qsTr("\n\nIf No Device With 'RoomNet' found, Check if The Appliance is Installed Properly and Turned on\n or \nYou Maybe Too Far From The Device \n or \n Maybe its Connected With Other Device")
+                visible: deviceFinder.notfound
             }
 
             delegate: Rectangle {
@@ -147,7 +165,7 @@ GamePage {
         id: searchButton
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: GameSettings.fieldMargin
+        anchors.bottomMargin: GameSettings.fieldMargin * 2
         width: viewContainer.width
         height: GameSettings.fieldHeight
         enabled: !deviceFinder.scanning
