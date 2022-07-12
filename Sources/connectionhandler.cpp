@@ -90,7 +90,7 @@ void ConnectionHandler::errorOccured(QGeoPositionInfoSource::Error err){
         m_loc = true;
         emit locationChanged();
     }
-    else if (QGeoPositionInfoSource::UpdateTimeoutError ){
+    else if (err == QGeoPositionInfoSource::UpdateTimeoutError ){
         m_loc = false;
         emit locationChanged();
     }
