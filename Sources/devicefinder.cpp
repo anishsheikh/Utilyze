@@ -23,7 +23,8 @@
 DeviceFinder::DeviceFinder(DeviceHandler *handler, QObject *parent):
     BluetoothBaseClass(parent),
     m_deviceHandler(handler),
-    m_ready(true)
+    m_ready(true),
+    not_found(false)
 {
     //! [devicediscovery-1]
     m_deviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
@@ -69,9 +70,9 @@ void DeviceFinder::addDevice(const QBluetoothDeviceInfo &device)
     if (device.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration) {
         m_devices.append(new DeviceInfo(device));
         setInfo(tr("Found Nearby Devices.. Finding More..."));
-//! [devicediscovery-3]
+        not_found = false;
+        emit notFoundChanged();
         emit devicesChanged();
-//! [devicediscovery-4]
     }
     //...
 }
@@ -89,13 +90,24 @@ void DeviceFinder::scanError(QBluetoothDeviceDiscoveryAgent::Error error)
         setError(tr("Unknown Error"));
 }
 
+bool DeviceFinder::notfound(){
+    return not_found;
+
+}
+
 void DeviceFinder::scanFinished()
 {
 
-    if (m_devices.isEmpty())
-        setError(tr("No Low Energy devices found."));
-    else
+    if (m_devices.isEmpty()){
+        setError(tr("No Bluetooth devices found."));
+        not_found = true;
+        emit notFoundChanged();
+    }
+    else {
         setInfo(tr("Scanning done."));
+        not_found = false;
+        emit notFoundChanged();
+    }
 
     emit scanningChanged();
     emit devicesChanged();
@@ -112,12 +124,17 @@ void DeviceFinder::connectToService(const QString &address)
             currentDevice = device;
             break;
         }
+        else {
+            setInfo("Search Again and Connect");
+        }
     }
 
-    if (currentDevice)
+    if (currentDevice) {
         m_deviceHandler->setDevice(currentDevice);
-
-    clearMessages();
+    }
+    else {
+        setInfo("Search Again and Connect");
+    }
 }
 
 bool DeviceFinder::scanning() const
