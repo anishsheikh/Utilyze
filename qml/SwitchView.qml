@@ -31,6 +31,24 @@ GamePage {
         deviceHandler.disconnectService();
         app.prevPage();
     }
+    Text {
+        id: title3
+        height:GameSettings.fieldHeight * 1.2
+        width: devices.width
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        anchors.top: parent.top
+        anchors.topMargin: parent.height * 0.15
+        anchors.leftMargin: parent.height * 0.1
+        anchors.left: parent.left
+        anchors.rightMargin: parent.height * 0.1
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: GamePage.Center
+        anchors.right: parent.right
+        color: GameSettings.textColor
+        font.pixelSize: GameSettings.smallTinyFontSize
+        text: qsTr("\nCheck if The Appliance is Powered On \n if Its a Power Cut \nOr\n You Have Moved far Away \n From The Device  \n Click On Disconnect Button \n and \n Wait for Power To Come Back \n Or \n Come Nearby The Device \n Then Connect Again \n Or \n Its Connected With Another Device")
+        visible: deviceHandler.disc
+    }
 
     Column{
         anchors.centerIn: parent
