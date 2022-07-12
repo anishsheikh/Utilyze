@@ -38,6 +38,7 @@ class DeviceFinder: public BluetoothBaseClass
     Q_PROPERTY(bool scanning READ scanning NOTIFY scanningChanged)
     Q_PROPERTY(bool ready READ ready NOTIFY stateChanged)
     Q_PROPERTY(QVariant devices READ devices NOTIFY devicesChanged)
+    Q_PROPERTY(bool notfound READ notfound NOTIFY notFoundChanged)
 
 public:
     DeviceFinder(DeviceHandler *handler, QObject *parent = nullptr);
@@ -54,17 +55,20 @@ private slots:
     void addDevice(const QBluetoothDeviceInfo&);
     void scanError(QBluetoothDeviceDiscoveryAgent::Error error);
     void scanFinished();
+    bool notfound();
 
 signals:
     void scanningChanged();
     void devicesChanged();
     void stateChanged();
+    void notFoundChanged();
 
 private:
     DeviceHandler *m_deviceHandler;
     QBluetoothDeviceDiscoveryAgent *m_deviceDiscoveryAgent;
     QList<QObject*> m_devices;
     bool m_ready;
+    bool not_found;
 
 #ifdef SIMULATOR
     QTimer m_demoTimer;
