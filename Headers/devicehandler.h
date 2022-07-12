@@ -37,6 +37,7 @@ class DeviceHandler : public BluetoothBaseClass
     QUuid BleApplianceInputid = QBluetoothUuid(QStringLiteral("YOUR-UUID"));
     QUuid BleApplianceOutputid = QBluetoothUuid(QStringLiteral("YOUR-UUID"));
     Q_PROPERTY(bool ready READ ready NOTIFY connectionChanged)
+    Q_PROPERTY(bool disc READ disc NOTIFY discChanged)
     Q_PROPERTY(AddressType addressType READ addressType WRITE setAddressType)
 
 public:
@@ -57,20 +58,31 @@ signals:
     void connectionChanged();
     void aliveChanged();
     void statsChanged();
+    void discChanged();
+    void dataReceived(const QByteArray &data);
 
 public slots:
     void disconnectService();
     void write(QByteArray &swn);
+
+
+
+
 
 private:
     //QLowEnergyController
     void serviceDiscovered(const QBluetoothUuid &);
     void serviceScanDone();
 
-    //QLowEnergyService
 
+    //QLowEnergyService
+    void onCharacteristicRead(const QLowEnergyCharacteristic &c, const QByteArray &value);
     void serviceStateChanged(QLowEnergyService::ServiceState s);
 
+private slots:
+    void read();
+    void inforead(const QByteArray &infr);
+    bool disc();
 #ifdef SIMULATOR
     void updateDemoHR();
 #endif
@@ -82,6 +94,7 @@ private:
     DeviceInfo *m_currentDevice = nullptr;
 
     bool m_foundRoomNetService;
+    bool m_disconnected;
 
 
     QLowEnergyController::RemoteAddressType m_addressType = QLowEnergyController::PublicAddress;
