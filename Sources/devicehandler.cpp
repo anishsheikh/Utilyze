@@ -96,7 +96,7 @@ void DeviceHandler::setDevice(DeviceInfo *device)
     }
 }
 
-void DeviceHandler::write(QByteArray &swn)
+void DeviceHandler::write(const QByteArray &swn)
 {
         if(m_service != nullptr && m_foundRoomNetService == true){
         const QLowEnergyCharacteristic input = m_service->characteristic(QBluetoothUuid(DeviceHandler::BleApplianceInputid));
