@@ -61,7 +61,7 @@ signals:
 
 public slots:
     void disconnectService();
-    void write(QByteArray &swn);
+    void write(const QByteArray &swn);
 
 
 
